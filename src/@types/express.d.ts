@@ -1,3 +1,4 @@
+import { AccountType } from "@prisma/client";
 import { UserResponseDTO } from "../schemas/dtos";
 declare global {
   namespace Express {
@@ -5,6 +6,7 @@ declare global {
       user?: {
         id: string;
         email: string;
+        accountType: AccountType;
       };
     }
   }

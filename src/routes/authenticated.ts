@@ -1,11 +1,13 @@
 import {Router} from 'express';
-import { register } from '../services/authService';
-import { UserRegisterDTO, UserRegisterSchema } from '../schemas/dtos';
+import { UserRegisterDTO, UserRegisterSchema, UserResponseDTO } from '../schemas/dtos';
+import { AppError } from '../error/AppError';
+import { getUserController } from '../controllers/userController';
 
 const router = Router();
 
-router.get("/get", async (req, res) => {
-    return res.status(200).json({t: req.user});
-})
+router.get("/me",  async (req, res) => {
+    await getUserController(req, res);
+});
+
 
 export default router;

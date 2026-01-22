@@ -3,7 +3,6 @@ import { UserLoginDTO, UserRegisterDTO, UserResponseDTO } from "../schemas/dtos"
 import { AppError } from "../error/AppError";
 import {sign} from 'jsonwebtoken';
 import bc from 'bcrypt';
-import cookieParser from "cookie-parser";
 
 const db = new PrismaClient();
 const secret = process.env.JWT_SECRET;
@@ -19,7 +18,7 @@ export async function register(data: UserRegisterDTO) {
     const user = await db.user.create({data: {
         ...data,
         password: hash
-    }});
+    }});    
 
     return user as UserResponseDTO;
 }

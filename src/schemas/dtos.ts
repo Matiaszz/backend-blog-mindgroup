@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { AccountType } from "@prisma/client";
+import { AccountType, Post } from "@prisma/client";
 
 /* =========================
    USER
