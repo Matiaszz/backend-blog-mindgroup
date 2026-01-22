@@ -1,5 +1,5 @@
 import { PrismaClient } from "@prisma/client";
-import { UserRegisterDTO } from "../schemas/dtos";
+import { UserRegisterDTO, UserResponseDTO } from "../schemas/dtos";
 import { AppError } from "../error/AppError";
 import bc from 'bcrypt';
 
@@ -18,5 +18,5 @@ export async function register(data: UserRegisterDTO) {
         password: hash
     }});
 
-    return user;
+    return user as UserResponseDTO;
 }

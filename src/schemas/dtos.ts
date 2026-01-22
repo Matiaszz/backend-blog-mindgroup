@@ -7,7 +7,7 @@ import { AccountType } from "@prisma/client";
 
 // Register
 export const UserRegisterSchema = z.object({
-  name: z.string().min(3, "Nome muito curto"),
+  name: z.string().min(2, "Nome muito curto"),
   email: z.email("Email inválido"),
   password: z.string().min(6, "Senha muito curta"),
 });
