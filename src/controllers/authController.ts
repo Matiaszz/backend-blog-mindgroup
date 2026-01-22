@@ -33,5 +33,6 @@ export async function loginController(req: Request, res: Response) {
 }
 
 export async function logoutController(req: Request, res: Response) {
+    console.log(req.user?.email);
     return res.clearCookie('auth').end();
 }

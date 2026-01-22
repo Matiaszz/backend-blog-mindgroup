@@ -6,6 +6,7 @@ import cookie from 'cookie-parser';
 import PublicRoutes from './routes/public';
 import AuthenticatedRoutes from './routes/authenticated';
 import AdminRoutes from './routes/admin';
+import { ensureAuthenticated } from './middleware/authenticated';
 
 const app = express();
 
@@ -16,7 +17,7 @@ app.use(cors({
 app.use(cookie());
 
 app.use('/api', PublicRoutes);
-app.use('/api', AuthenticatedRoutes);
+app.use('/api', ensureAuthenticated, AuthenticatedRoutes);
 app.use('/api/admin', AdminRoutes);
 
 app.use(errorHandler);
