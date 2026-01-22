@@ -17,7 +17,7 @@ export type UserRegisterDTO = z.infer<typeof UserRegisterSchema>;
 // Login
 export const UserLoginSchema = z.object({
   email: z.email(),
-  password: z.string().min(6),
+  password: z.string(),
 });
 
 export type UserLoginDTO = z.infer<typeof UserLoginSchema>;

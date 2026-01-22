@@ -2,6 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import 'dotenv/config';
 import { errorHandler } from './middleware/errorHandler';
+import cookie from 'cookie-parser';
 import PublicRoutes from './routes/public';
 import AuthenticatedRoutes from './routes/authenticated';
 import AdminRoutes from './routes/admin';
@@ -12,6 +13,7 @@ app.use(express.json());
 app.use(cors({
     credentials: true,
 }));
+app.use(cookie());
 
 app.use('/api', PublicRoutes);
 app.use('/api', AuthenticatedRoutes);
