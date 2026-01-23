@@ -1,8 +1,11 @@
 import {Router} from 'express';
-import { register } from '../services/authService';
-import { UserRegisterDTO, UserRegisterSchema } from '../schemas/dtos';
+import { createCategoryController } from '../controllers/categoryController';
 
 const router = Router();
+
+router.post('/category', async (req, res) => {
+    await createCategoryController(req, res);
+});
 
 
 export default router;

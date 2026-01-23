@@ -7,7 +7,7 @@ export async function registerController(req: Request, res: Response) {
 
     if (!parsed.success) {
         return res.status(400).json({
-        errors: parsed.error.flatten().fieldErrors,
+            errors: parsed.error.flatten().fieldErrors,
         });
     }
 
@@ -29,7 +29,12 @@ export async function loginController(req: Request, res: Response) {
     }
 
     const token = await Login(parsed.data);
-    return res.cookie('auth', token).status(204).end();
+    return res.cookie('auth', token, {
+        httpOnly: true,
+        secure: false,
+        sameSite: "lax",
+        path: "/"
+    }).status(204).end();
 }
 
 export async function logoutController(req: Request, res: Response) {

@@ -7,6 +7,9 @@ import PublicRoutes from './routes/public';
 import AuthenticatedRoutes from './routes/authenticated';
 import AdminRoutes from './routes/admin';
 import { ensureAuthenticated } from './middleware/authenticated';
+import { ensureIsAdmin } from './middleware/admin';
+import path from "path";
+
 
 const app = express();
 
@@ -19,7 +22,12 @@ app.use(cookie());
 
 app.use('/api', PublicRoutes);
 app.use('/api', ensureAuthenticated, AuthenticatedRoutes);
-app.use('/api/admin', AdminRoutes);
+app.use('/api/admin', ensureIsAdmin, AdminRoutes);
+
+app.use(
+  "/files",
+  express.static(path.resolve(process.cwd(), 'uploads'))
+);
 
 app.use(errorHandler);
 

@@ -1,0 +1,43 @@
+import { Request, Response } from "express";
+import { createPost, getPost, getPostCoverImage, uploadImage } from "../services/postService";
+import { PostCreateDTO, PostCreateSchema } from "../schemas/dtos";
+import { AppError } from "../error/AppError";
+import { Bytes } from "@prisma/client/runtime/library";
+
+export async function createPostController(req: Request, res: Response) {
+    const parsed = PostCreateSchema.safeParse(req.body);
+    
+    if (!parsed.success){
+        return res.status(400).json({
+            errors: parsed.error.flatten().fieldErrors,
+        });
+    }
+    if (!req.user) throw new AppError('Usuário não autenticado', 401);
+
+    const post = await createPost(req.body as PostCreateDTO,req.user.id);
+
+    return res.status(201).json(post);
+}
+
+export async function uploadImageController(req: Request, res: Response, buffer: Buffer | undefined) {
+    const {id} = req.params;
+    if (!id) throw new AppError('Post not found.', 404);
+
+    await uploadImage(id.toString(), buffer);
+    return res.status(200).json({imageUpdated: true});
+}
+
+export async function getPostByIdController(req: Request, res: Response) {
+    const {id} = req.params;
+    if (!id) throw new AppError('Post not found.', 404);
+
+    return res.json(await getPost(id.toString()));
+}
+
+export async function getPostCoverController(req: Request, res: Response) {
+    const {id} = req.params;
+    if (!id) throw new AppError('Post not found.', 404);
+
+    const buffer = await getPostCoverImage(id.toString())
+    return res.type("image/jpeg").send(buffer);
+}

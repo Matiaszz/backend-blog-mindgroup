@@ -10,6 +10,7 @@ export async function getMe(id: string) {
       name: true,
       email: true,
       biography: true,
+      profilePictureUrl: true,
       accountType: true,
       createdAt: true,
     }

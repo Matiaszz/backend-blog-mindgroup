@@ -26,10 +26,12 @@ export type UserResponseDTO = {
   id: string;
   name: string;
   email: string;
+  profilePictureUrl: string;
   biography?: string | null;
   accountType: AccountType;
   createdAt: Date;
 };
+
 
 export const CategoryCreateSchema = z.object({
   label: z.string().min(2),
@@ -46,27 +48,43 @@ export const PostCreateSchema = z.object({
   title: z.string().min(3),
   summary: z.string().min(10),
   content: z.string().min(20),
-  coverImage: z.url(),
-  tags: z.string(),
+  tags: z.array(z.string().min(1)),
   categoryId: z.number(),
 });
 
 export type PostCreateDTO = z.infer<typeof PostCreateSchema>;
+
+export type UserPublicDTO = {
+  id: string;
+  name: string;
+  email: string;
+  profilePictureUrl: string | null;
+};
+
 
 export type PostResponseDTO = {
   id: string;
   title: string;
   summary: string;
   content: string;
-  coverImage: string;
-  tags: string;
   published: boolean;
   views: number;
   averageReadTimeInMinutes: number;
   createdAt: Date;
-  author: UserResponseDTO
-  category: CategoryResponseDTO
+  author: UserPublicDTO;
+  category: CategoryResponseDTO;
+  tags: TagResponseDTO[];
 };
+
+
+export type TagRequestDTO = {
+  value: string;
+}
+
+export type TagResponseDTO = {
+  id: number;
+  name: string;
+}
 
 export const CommentCreateSchema = z.object({
   postId: z.uuid(),
@@ -74,6 +92,7 @@ export const CommentCreateSchema = z.object({
 });
 
 export type CommentCreateDTO = z.infer<typeof CommentCreateSchema>;
+
 export type LogResponseDTO = {
   id: number;
   action: string;

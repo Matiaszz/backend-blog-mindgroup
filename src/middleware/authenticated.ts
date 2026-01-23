@@ -23,7 +23,7 @@ export function ensureAuthenticated(
     req.user = {
       id: decoded.id,
       email: decoded.email,
-      accountType: decoded.accountType
+      accountType: decoded.accountType,
     };
 
     return next();

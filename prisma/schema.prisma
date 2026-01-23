@@ -19,19 +19,21 @@ enum AccountType {
 }
 
 model User {
-  id          String      @id @default(uuid())
-  email       String      @unique
-  password    String
-  name        String
-  biography   String?
-  accountType AccountType @default(USER)
-  posts       Post[]
-  likes       Like[]
-  comments    Comment[]
-  favorites   Favorite[]
-  createdAt   DateTime    @default(now())
-  updatedAt   DateTime    @updatedAt
-  logs        Log[]
+  id                String        @id @default(uuid())
+  email             String        @unique
+  password          String
+  name              String
+  biography         String?
+  profilePictureUrl String?       @default("https://toppng.com/uploads/preview/instagram-default-profile-picture-11562973083brycehrmyv.png")
+  accountType       AccountType   @default(USER)
+  posts             Post[]
+  likes             Like[]
+  comments          Comment[]
+  favorites         Favorite[]
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  logs              Log[]
+  commentLikes      CommentLike[]
 }
 
 model Category {
@@ -45,8 +47,8 @@ model Post {
   title                    String
   summary                  String
   content                  String
-  coverImage               String
-  tags                     String
+  coverImage               Bytes?
+  tags                     Tag[]
   published                Boolean @default(false)
   views                    Int     @default(0)
   averageReadTimeInMinutes Int     @default(1)
@@ -61,9 +63,30 @@ model Post {
   comments  Comment[]
   Favorites Favorite[]
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-  logs      Log[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  logs         Log[]
+  commentLikes CommentLike[]
+  postTags     PostTag[]
+}
+
+model Tag {
+  id   Int    @id @default(autoincrement())
+  name String @unique
+
+  postTags PostTag[]
+  post     Post?     @relation(fields: [postId], references: [id])
+  postId   String?
+}
+
+model PostTag {
+  postId String
+  tagId  Int
+
+  post Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag  Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([postId, tagId])
 }
 
 model Like {
@@ -81,6 +104,20 @@ model Comment {
 
   post   Post   @relation(fields: [postId], references: [id])
   postId String
+
+  commentLikes CommentLike[]
+}
+
+model CommentLike {
+  id     Int    @id @default(autoincrement())
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  post   Post   @relation(fields: [postId], references: [id])
+  postId String
+
+  comment   Comment? @relation(fields: [commentId], references: [id])
+  commentId Int?
 }
 
 model Favorite {
