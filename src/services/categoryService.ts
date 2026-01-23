@@ -12,3 +12,7 @@ export async function createCategory(data: CategoryCreateDTO) {
 
     return {isList: true, data: category};
 }
+
+export async function getAllCategories() {
+    return await db.category.findMany();
+}

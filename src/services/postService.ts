@@ -128,9 +128,12 @@ export async function getPostCoverImage(id: string) {
   if (!post) {
     throw new AppError('Post not found.', 404);
   }
+
+  if (!post.coverImage){
+    throw new AppError('Cover image not found.', 404)
+  }
   
   return post.coverImage;
-  
 }
 
 export async function getAllPosts() {
