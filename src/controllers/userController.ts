@@ -10,5 +10,5 @@ export async function getUserController(req: Request, res: Response) {
     }
 
     const user: UserResponseDTO = await getMe(req.user.id);
-    return res.status(200).json({user});
+    return res.status(200).json(user);
 }

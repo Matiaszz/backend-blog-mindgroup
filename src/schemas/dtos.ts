@@ -73,7 +73,6 @@ export type PostResponseDTO = {
   createdAt: Date;
   author: UserPublicDTO;
   category: CategoryResponseDTO;
-  tags: TagResponseDTO[];
 };
 
 

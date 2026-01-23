@@ -1,7 +1,7 @@
 import {Router} from 'express';
 import { UserRegisterDTO, UserRegisterSchema } from '../schemas/dtos';
 import { loginController, logoutController, registerController } from '../controllers/authController';
-import { getPostByIdController, getPostCoverController } from '../controllers/postController';
+import { getPostByIdController, getPostCoverController, getPosts as getPostsController } from '../controllers/postController';
 
 const router = Router();
 
@@ -24,6 +24,10 @@ router.get('/post/:id', async (req, res) => {
 
 router.get('/post/:id/cover', async (req, res) => {
     await getPostCoverController(req, res);
+});
+
+router.get('/posts', async (req, res) => {
+    await getPostsController(req, res);
 });
 
 

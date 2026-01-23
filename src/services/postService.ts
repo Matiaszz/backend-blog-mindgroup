@@ -6,6 +6,8 @@ const db = new PrismaClient();
 
 const WORDS_PER_MINUTE = 200;
 
+
+
 export async function createPost(dto: PostCreateDTO, authorId: string, ) {
   const { title, summary, content, tags, categoryId } = dto;
 
@@ -41,47 +43,11 @@ export async function createPost(dto: PostCreateDTO, authorId: string, ) {
         })),
       },
     },
-    select: {
-      id: true,
-      title: true,
-      summary: true,
-      content: true,
-      published: true,
-      views: true,
-      averageReadTimeInMinutes: true,
-      createdAt: true,
-
-      author: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          profilePictureUrl: true,
-        },
-      },
-
-      category: {
-        select: {
-          id: true,
-          label: true,
-        },
-      },
-
-      postTags: {
-        select: {
-          tag: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
-        },
-      },
-    },
+    select: getPostSelect()
   });
 
 
-  return {...post, tags: post.postTags.map(t => t.tag)} as PostResponseDTO;
+  return post as PostResponseDTO;
 }
 
 export async function uploadImage(postId: string, buffer: Buffer | undefined) {
@@ -141,7 +107,53 @@ export async function uploadImage(postId: string, buffer: Buffer | undefined) {
 export async function getPost(id: string) {
   const post = await db.post.findUnique({
     where: { id },
+    select: getPostSelect()
+  });
+
+  if (!post) {
+    throw new AppError('Post not found.', 404);
+  }
+
+  return post as PostResponseDTO;
+}
+
+export async function getPostCoverImage(id: string) {
+  const post = await db.post.findUnique({
+    where: { id },
     select: {
+      coverImage: true
+    }
+  });
+
+  if (!post) {
+    throw new AppError('Post not found.', 404);
+  }
+  
+  return post.coverImage;
+  
+}
+
+export async function getAllPosts() {
+  const posts = await db.post.findMany({
+    select: getPostSelect()
+  });
+
+  return posts as PostResponseDTO[];
+}
+
+function calculateReadTime(text: string): number {
+  const words = text
+    .trim()
+    .split(/\s+/) // get only the text
+    .filter(Boolean).length; // get only the non-falsy values
+
+
+  // get the int part of this expression
+  return Math.max(1, Math.ceil(words / WORDS_PER_MINUTE));
+}
+
+function getPostSelect() {
+  return {
       id: true,
       title: true,
       summary: true,
@@ -177,41 +189,5 @@ export async function getPost(id: string) {
           },
         },
       },
-    },
-  });
-
-  if (!post) {
-    throw new AppError('Post not found.', 404);
-  }
-
-  return {...post, tags: post.postTags.map(t => t.tag)} as PostResponseDTO;
-}
-
-export async function getPostCoverImage(id: string) {
-  const post = await db.post.findUnique({
-    where: { id },
-    select: {
-      coverImage: true
     }
-  });
-
-  if (!post) {
-    throw new AppError('Post not found.', 404);
-  }
-  
-  return post.coverImage;
-  
-}
-
-
-
-function calculateReadTime(text: string): number {
-  const words = text
-    .trim()
-    .split(/\s+/) // get only the text
-    .filter(Boolean).length; // get only the non-falsy values
-
-
-  // get the int part of this expression
-  return Math.max(1, Math.ceil(words / WORDS_PER_MINUTE));
 }
