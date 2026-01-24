@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { AppError } from "../error/AppError";
-import { PostCreateDTO, PostResponseDTO } from "../schemas/dtos";
+import { LikeCreateDTO, LikeResponseDTO, PostCreateDTO, PostResponseDTO } from "../schemas/dtos";
 
 const db = new PrismaClient();
 
@@ -75,6 +75,7 @@ export async function uploadImage(postId: string, buffer: Buffer | undefined) {
           name: true,
           email: true,
           profilePictureUrl: true,
+          createdAt: true,
         },
       },
       category: {
@@ -105,8 +106,8 @@ export async function uploadImage(postId: string, buffer: Buffer | undefined) {
           id: true,
           content: true,
           user: true,
-          commentLikes: true
-
+          commentLikes: true,
+          createdAt: true
         }
       },
 
@@ -256,6 +257,54 @@ export async function deletePostById(userId: string, postId: string) {
   return true;
 }
 
+export async function toogleLikePost(userId: string, {postId}: LikeCreateDTO) {
+  if (!userId) throw new AppError('User not found', 404);
+  if (!postId) throw new AppError('Post not found', 404);
+
+  const res = await db.$transaction(async (tx) => {
+    const post = await tx.post.findUnique({where: {
+      id: postId
+    }});
+
+    if  (!post) throw new AppError('Post not found', 404);
+
+    const like = await tx.like.findUnique({where: {
+      postId_userId: {
+        postId,
+        userId
+      }
+    }});
+
+    if (!like){
+      const create = await tx.like.create({
+        data: {
+          postId,
+          userId
+        }, select: {
+          id: true,
+          postId: true,
+          userId: true
+        }
+      });
+
+      return {...create as LikeResponseDTO, like: true };
+    }
+
+    const deleteLike = await tx.like.delete({
+      where: {
+        postId_userId: {
+          postId,
+          userId
+        }
+      }
+    });
+
+    return {...deleteLike as LikeResponseDTO, like: false };
+  });
+
+  return res as LikeResponseDTO;
+}
+
 function calculateReadTime(text: string): number {
   const words = text
     .trim()
@@ -315,7 +364,8 @@ function getPostSelect() {
           id: true,
           content: true,
           user: true,
-          commentLikes: true
+          commentLikes: true,
+          createdAt: true
 
         }
       },
