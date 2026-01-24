@@ -96,10 +96,11 @@ export const CommentCreateSchema = z.object({
 export type CommentCreateDTO = z.infer<typeof CommentCreateSchema>;
 
 export type CommentResponseDTO = {
-  id: number, 
-  content: string,
-  user: UserResponseDTO,
-  commentLikes: CommentLikeResponseDTO[]
+  id: number;
+  content: string;
+  user: UserResponseDTO;
+  commentLikes: CommentLikeResponseDTO[];
+  createdAt: Date;
 }
 
 export const CommentLikeCreateSchema = z.object({

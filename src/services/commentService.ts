@@ -24,22 +24,24 @@ export async function createComment(userId: string, dto: CommentCreateDTO) {
 function getCommentSelect(){
     return {
         id: true,
-            content: true,
-            user: {
-                select: {
-                    id: true,
-                    name: true,
-                    email: true,
-                    accountType: true,
-                }
-            },
-            commentLikes: {
-                select: {
-                    id: true,
-                    userId: true,
-                    commentId: true,
-                    postId: true
-                }
+        content: true,
+        user: {
+            select: {
+                id: true,
+                name: true,
+                email: true,
+                accountType: true,
             }
+        },
+        commentLikes: {
+            select: {
+                id: true,
+                userId: true,
+                commentId: true,
+                postId: true
+            }
+        },
+        createdAt: true
+
     }
 }
