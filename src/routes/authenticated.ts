@@ -1,7 +1,7 @@
 import {Router} from 'express';
 import { AppError } from '../error/AppError';
 import { getUserController } from '../controllers/userController';
-import { createPostController, deletePostByIdController, getMyPostsController, uploadImageController } from '../controllers/postController';
+import { createPostController, deletePostByIdController, getMyPostsController, removeCover, updatePostByIdController, uploadImageController } from '../controllers/postController';
 import multer from 'multer';
 import { multerConfig } from '../config/multer';
 
@@ -33,5 +33,13 @@ router.get('/posts/my', async (req, res) => {
 router.delete('/post/:id', async (req, res) => {
     await deletePostByIdController(req, res);
 });
+
+router.put('/post/:postId', async (req, res) => {
+    await updatePostByIdController(req, res);
+});
+
+router.delete('/post/:postId/removeCover', async (req, res) => {
+    await removeCover(req, res);
+})
 
 export default router;

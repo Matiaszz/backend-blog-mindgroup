@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createPost, deletePostById, getAllPosts, getMyPosts, getPost, getPostCoverImage, uploadImage } from "../services/postService";
+import { createPost, deletePostById, getAllPosts, getMyPosts, getPost, getPostCoverImage, removeCoverImage, updatePostById, uploadImage } from "../services/postService";
 import { PostCreateDTO, PostCreateSchema } from "../schemas/dtos";
 import { AppError } from "../error/AppError";
 import { Bytes } from "@prisma/client/runtime/library";
@@ -56,3 +56,15 @@ export async function deletePostByIdController(req: Request, res: Response) {
     return res.json(await deletePostById(req.user?.id ?? '', id.toString() ?? ''));
 }
 
+export async function updatePostByIdController(req: Request, res: Response) {
+    const {postId} = req.params;
+    return res.json(await updatePostById(req.user?.id ?? '', postId.toString(), req.body as PostCreateDTO))
+}
+
+export async function removeCover(req: Request, res: Response) {
+    const {postId} = req.params;
+    if (!postId) throw new AppError('Post not found.', 404);
+
+    const buffer = await removeCoverImage(postId.toString(), req.user?.id ?? '');
+    return res.type("image/jpeg").send(buffer);
+}

@@ -158,6 +158,40 @@ export async function getPostCoverImage(id: string) {
   return post.coverImage;
 }
 
+
+export async function removeCoverImage(id: string, userId: string) {
+  if (!userId){
+    throw new AppError('User not found.',404)
+  }
+  const result = await db.$transaction(async (tx) => {
+    const post = await tx.post.findUnique({
+      where: { id, authorId: userId },
+      select: {
+        coverImage: true
+      }
+    });
+
+    if (!post) {
+      throw new AppError('Post not found.', 404);
+    }
+
+    if (!post.coverImage) {
+      throw new AppError('Cover image not found.', 404);
+    }
+
+    await tx.post.update({
+      where: { id },
+      data: {
+        coverImage: null
+      }
+    });
+
+    return post.coverImage;
+  });
+
+  return result;
+}
+
 export async function getAllPosts() {
   const posts = await db.post.findMany({
     select: getPostSelect()
@@ -174,6 +208,35 @@ export async function getMyPosts(userId: string) {
   });
 
   return posts as PostResponseDTO[];
+}
+
+export async function updatePostById(userId: string, postId: string, dto: PostCreateDTO): Promise<PostResponseDTO> {
+  if (!userId) throw new AppError('User not found', 404);
+  if (!postId) throw new AppError('Post not found', 404);
+
+  const readTime = calculateReadTime(dto.content.trim());
+
+
+  const post = await db.post.update({where: {
+    authorId: userId,
+    id: postId
+  }, data: {
+    title: dto.title,
+    summary: dto.summary,
+
+    tags: {
+      set: [], 
+      connectOrCreate: dto.tags.map(tag => ({
+        where: { name: tag },
+        create: { name: tag }
+      }))
+    },
+
+    averageReadTimeInMinutes: readTime, 
+    categoryId: dto.categoryId,
+  }, select: getPostSelect()});
+
+  return post as PostResponseDTO;
 }
 
 export async function deletePostById(userId: string, postId: string) {
