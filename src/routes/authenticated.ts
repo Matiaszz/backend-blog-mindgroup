@@ -4,7 +4,7 @@ import { getUserController, updateUserController } from '../controllers/userCont
 import { createPostController, deletePostByIdController, getMyPostsController, removeCover, togglePostFavoriteController, tooglePostLikeController as togglePostLikeController, updatePostByIdController, uploadImageController } from '../controllers/postController';
 import multer from 'multer';
 import { multerConfig } from '../config/multer';
-import { createCommentController } from '../controllers/commentController';
+import { createCommentController, toggleCommentLikeController } from '../controllers/commentController';
 
 const router = Router();
 const upload = multer(multerConfig);
@@ -47,12 +47,16 @@ router.post('/comment', async (req, res) => {
     await createCommentController(req, res);
 });
 
-router.post('/toggleLike', async (req, res) => {
+router.put('/toggleLike', async (req, res) => {
     await togglePostLikeController(req, res);
 });
 
-router.post('/toggleFavorite', async (req, res) => {
+router.put('/toggleFavorite', async (req, res) => {
     await togglePostFavoriteController(req, res);
+});
+
+router.put('/toggleCommentLike', async (req, res) => {
+    await toggleCommentLikeController(req, res);
 });
 
 router.put('/user', async (req, res) => {

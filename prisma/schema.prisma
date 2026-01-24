@@ -125,6 +125,8 @@ model CommentLike {
 
   comment   Comment? @relation(fields: [commentId], references: [id])
   commentId Int?
+
+  @@unique([commentId, userId])
 }
 
 model Favorite {

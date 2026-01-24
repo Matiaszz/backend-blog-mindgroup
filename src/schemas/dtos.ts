@@ -113,7 +113,6 @@ export type CommentResponseDTO = {
 }
 
 export const CommentLikeCreateSchema = z.object({
-  postId: z.uuid(),
   commentId: z.int(),
 });
 

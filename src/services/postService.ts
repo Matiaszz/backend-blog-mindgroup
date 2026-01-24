@@ -347,10 +347,10 @@ export async function toggleFavoritePost(userId: string, {postId}: LikeCreateDTO
       }
     });
 
-    return {...deleteFavorite as LikeResponseDTO, favorited: false };
+    return {...deleteFavorite as FavoriteResponseDTO, favorited: false };
   });
 
-  return res as LikeResponseDTO;
+  return res as FavoriteResponseDTO;
 }
 
 
