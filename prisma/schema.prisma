@@ -98,7 +98,10 @@ model Like {
 }
 
 model Comment {
-  id     Int    @id @default(autoincrement())
+  id Int @id @default(autoincrement())
+
+  content String @db.Text
+
   user   User   @relation(fields: [userId], references: [id])
   userId String
 

@@ -91,11 +91,22 @@ export async function uploadImage(postId: string, buffer: Buffer | undefined) {
           postId: true
         }
       },
+
       favorites: {
         select: {
           id: true,
           userId: true,
           postId: true
+        }
+      },
+
+      comments: {
+        select : {
+          id: true,
+          content: true,
+          user: true,
+          commentLikes: true
+
         }
       },
 
@@ -206,6 +217,16 @@ function getPostSelect() {
           id: true,
           userId: true,
           postId: true
+        }
+      },
+
+      comments: {
+        select : {
+          id: true,
+          content: true,
+          user: true,
+          commentLikes: true
+
         }
       },
 

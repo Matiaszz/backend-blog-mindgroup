@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { AccountType, Post } from "@prisma/client";
+import { AccountType, CommentLike, Post } from "@prisma/client";
 
 /* =========================
    USER
@@ -72,6 +72,7 @@ export type PostResponseDTO = {
   averageReadTimeInMinutes: number;
   likes: LikeResponseDTO[];
   favorites: FavoriteResponseDTO[];
+  comments: CommentResponseDTO[];
   createdAt: Date;
   author: UserPublicDTO;
   category: CategoryResponseDTO;
@@ -93,6 +94,27 @@ export const CommentCreateSchema = z.object({
 });
 
 export type CommentCreateDTO = z.infer<typeof CommentCreateSchema>;
+
+export type CommentResponseDTO = {
+  id: number, 
+  content: string,
+  user: UserResponseDTO,
+  commentLikes: CommentLike[]
+}
+
+export const CommentLikeCreateSchema = z.object({
+  postId: z.uuid(),
+  commentId: z.int(),
+});
+
+export type CommentLikeDTO = z.infer<typeof CommentLikeCreateSchema>;
+
+export type CommentLikeResponseDTO = {
+  id: number,
+  userId: string,
+  postId: string,
+  commentId: number
+}
 
 export type LogResponseDTO = {
   id: number;
@@ -127,3 +149,4 @@ export type FavoriteResponseDTO = {
   userId: string,
   postId: string
 }
+
