@@ -166,6 +166,16 @@ export async function getAllPosts() {
   return posts as PostResponseDTO[];
 }
 
+export async function getMyPosts(userId: string) {
+  if (!userId) throw new AppError('User not found', 404);
+  const posts = await db.post.findMany({where: {
+      authorId: userId
+    }, select: getPostSelect()
+  });
+
+  return posts as PostResponseDTO[];
+}
+
 function calculateReadTime(text: string): number {
   const words = text
     .trim()

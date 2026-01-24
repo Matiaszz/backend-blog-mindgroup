@@ -1,7 +1,7 @@
 import {Router} from 'express';
 import { AppError } from '../error/AppError';
 import { getUserController } from '../controllers/userController';
-import { createPostController, uploadImageController } from '../controllers/postController';
+import { createPostController, getMyPostsController, uploadImageController } from '../controllers/postController';
 import multer from 'multer';
 import { multerConfig } from '../config/multer';
 
@@ -24,6 +24,10 @@ router.post('/post/:id/upload', upload.single("file"), async (req, res) => {
     
     const coverImage = req.file?.buffer;
     await uploadImageController(req, res, coverImage);
+});
+
+router.get('/posts/my', async (req, res) => {
+    await getMyPostsController(req, res);
 });
 
 export default router;

@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { createPost, getAllPosts, getPost, getPostCoverImage, uploadImage } from "../services/postService";
+import { createPost, getAllPosts, getMyPosts, getPost, getPostCoverImage, uploadImage } from "../services/postService";
 import { PostCreateDTO, PostCreateSchema } from "../schemas/dtos";
 import { AppError } from "../error/AppError";
 import { Bytes } from "@prisma/client/runtime/library";
@@ -45,4 +45,8 @@ export async function getPostCoverController(req: Request, res: Response) {
 
 export async function getPosts(req: Request, res: Response) {
     return res.json(await getAllPosts());
+}
+
+export async function getMyPostsController(req: Request, res: Response) {
+    return res.json(await getMyPosts(req.user?.id ?? ''));
 }
