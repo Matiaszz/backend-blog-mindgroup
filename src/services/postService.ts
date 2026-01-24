@@ -176,6 +176,23 @@ export async function getMyPosts(userId: string) {
   return posts as PostResponseDTO[];
 }
 
+export async function deletePostById(userId: string, postId: string) {
+  if (!userId) throw new AppError('User not found', 404);
+  if (!postId) throw new AppError('Post not found', 404);
+
+  const post = await db.post.findUnique({where: {
+      authorId: userId,
+      id: postId
+    }
+  });
+
+  if (!post){
+    throw new AppError('This user is not the post owner ', 404);
+  }
+
+  return true;
+}
+
 function calculateReadTime(text: string): number {
   const words = text
     .trim()

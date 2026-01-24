@@ -1,7 +1,7 @@
 import {Router} from 'express';
 import { AppError } from '../error/AppError';
 import { getUserController } from '../controllers/userController';
-import { createPostController, getMyPostsController, uploadImageController } from '../controllers/postController';
+import { createPostController, deletePostByIdController, getMyPostsController, uploadImageController } from '../controllers/postController';
 import multer from 'multer';
 import { multerConfig } from '../config/multer';
 
@@ -28,6 +28,10 @@ router.post('/post/:id/upload', upload.single("file"), async (req, res) => {
 
 router.get('/posts/my', async (req, res) => {
     await getMyPostsController(req, res);
+});
+
+router.delete('/post/:id', async (req, res) => {
+    await deletePostByIdController(req, res);
 });
 
 export default router;
