@@ -4,6 +4,7 @@ import { getUserController } from '../controllers/userController';
 import { createPostController, deletePostByIdController, getMyPostsController, removeCover, updatePostByIdController, uploadImageController } from '../controllers/postController';
 import multer from 'multer';
 import { multerConfig } from '../config/multer';
+import { createCommentController } from '../controllers/commentController';
 
 const router = Router();
 const upload = multer(multerConfig);
@@ -40,6 +41,10 @@ router.put('/post/:postId', async (req, res) => {
 
 router.delete('/post/:postId/removeCover', async (req, res) => {
     await removeCover(req, res);
-})
+});
+
+router.post('/comment', async (req, res) => {
+    await createCommentController(req, res);
+});
 
 export default router;

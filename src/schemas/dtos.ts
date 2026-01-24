@@ -99,7 +99,7 @@ export type CommentResponseDTO = {
   id: number, 
   content: string,
   user: UserResponseDTO,
-  commentLikes: CommentLike[]
+  commentLikes: CommentLikeResponseDTO[]
 }
 
 export const CommentLikeCreateSchema = z.object({
