@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
-import { createPost, deletePostById, getAllPosts, getMyPosts, getPost, getPostCoverImage, removeCoverImage, toogleLikePost, updatePostById, uploadImage } from "../services/postService";
-import { LikeCreateDTO, LikeCreationSchema, PostCreateDTO, PostCreateSchema } from "../schemas/dtos";
+import { createPost, deletePostById, getAllPosts, getMyPosts, getPost, getPostCoverImage, removeCoverImage, toggleFavoritePost, toogleLikePost as toggleLikePost, updatePostById, uploadImage } from "../services/postService";
+import { FavoriteCreateDTO, FavoriteCreationSchema, LikeCreateDTO, LikeCreationSchema, PostCreateDTO, PostCreateSchema } from "../schemas/dtos";
 import { AppError } from "../error/AppError";
 import { Bytes } from "@prisma/client/runtime/library";
 
@@ -71,10 +71,21 @@ export async function removeCover(req: Request, res: Response) {
 
 export async function tooglePostLikeController(req: Request, res: Response) {
     const parsed = LikeCreationSchema.safeParse(req.body);
-    
+
     if(!parsed.success) {
         return res.status(400).json(parsed.error.flatten().formErrors);
     }
 
-    return res.json(await toogleLikePost(req.user?.id ?? '', req.body as LikeCreateDTO));    
+    return res.json(await toggleLikePost(req.user?.id ?? '', req.body as LikeCreateDTO));    
 }
+
+export async function togglePostFavoriteController(req: Request, res: Response) {
+    const parsed = FavoriteCreationSchema.safeParse(req.body);
+
+    if(!parsed.success) {
+        return res.status(400).json(parsed.error.flatten().formErrors);
+    }
+
+    return res.json(await toggleFavoritePost(req.user?.id ?? '', req.body as FavoriteCreateDTO));    
+}
+

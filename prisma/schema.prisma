@@ -134,6 +134,8 @@ model Favorite {
 
   post   Post   @relation(fields: [postId], references: [id])
   postId String
+
+  @@unique([postId, userId])
 }
 
 model Log {

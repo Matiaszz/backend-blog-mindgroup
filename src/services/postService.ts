@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { AppError } from "../error/AppError";
-import { LikeCreateDTO, LikeResponseDTO, PostCreateDTO, PostResponseDTO } from "../schemas/dtos";
+import { FavoriteResponseDTO, LikeCreateDTO, LikeResponseDTO, PostCreateDTO, PostResponseDTO } from "../schemas/dtos";
 
 const db = new PrismaClient();
 
@@ -304,6 +304,55 @@ export async function toogleLikePost(userId: string, {postId}: LikeCreateDTO) {
 
   return res as LikeResponseDTO;
 }
+
+export async function toggleFavoritePost(userId: string, {postId}: LikeCreateDTO) {
+  if (!userId) throw new AppError('User not found', 404);
+  if (!postId) throw new AppError('Post not found', 404);
+
+  const res = await db.$transaction(async (tx) => {
+    const post = await tx.post.findUnique({where: {
+      id: postId
+    }});
+
+    if  (!post) throw new AppError('Post not found', 404);
+
+    const favorite = await tx.favorite.findUnique({where: {
+      postId_userId: {
+        postId,
+        userId
+      }
+    }});
+
+    if (!favorite){
+      const create = await tx.favorite.create({
+        data: {
+          postId,
+          userId
+        }, select: {
+          id: true,
+          postId: true,
+          userId: true
+        }
+      });
+
+      return {...create as FavoriteResponseDTO, favorited: true };
+    }
+
+    const deleteFavorite = await tx.favorite.delete({
+      where: {
+        postId_userId: {
+          postId,
+          userId
+        }
+      }
+    });
+
+    return {...deleteFavorite as LikeResponseDTO, favorited: false };
+  });
+
+  return res as LikeResponseDTO;
+}
+
 
 function calculateReadTime(text: string): number {
   const words = text
