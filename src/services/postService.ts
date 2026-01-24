@@ -30,8 +30,6 @@ export async function createPost(dto: PostCreateDTO, authorId: string, ) {
       categoryId,
       authorId,
       averageReadTimeInMinutes: avgReadTimeInMinutes,
-
-
       postTags: {
         create: tags.map(tagName => ({
           tag: {
@@ -85,6 +83,22 @@ export async function uploadImage(postId: string, buffer: Buffer | undefined) {
           label: true,
         },
       },
+
+      likes: {
+        select: {
+          id: true,
+          userId: true,
+          postId: true
+        }
+      },
+      favorites: {
+        select: {
+          id: true,
+          userId: true,
+          postId: true
+        }
+      },
+
       postTags: {
         select: {
           tag: {
@@ -98,10 +112,7 @@ export async function uploadImage(postId: string, buffer: Buffer | undefined) {
     },
   });
 
-  return {
-    ...updated,
-    tags: updated.postTags.map(p => p.tag),
-  } as PostResponseDTO;
+  return updated as PostResponseDTO;
 }
 
 export async function getPost(id: string) {
@@ -180,6 +191,22 @@ function getPostSelect() {
           id: true,
           label: true,
         },
+      },
+
+      likes: {
+        select: {
+          id: true,
+          userId: true,
+          postId: true
+        }
+      },
+
+      favorites: {
+        select: {
+          id: true,
+          userId: true,
+          postId: true
+        }
       },
 
       postTags: {

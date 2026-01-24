@@ -61,7 +61,7 @@ model Post {
 
   likes     Like[]
   comments  Comment[]
-  Favorites Favorite[]
+  favorites Favorite[]
 
   createdAt    DateTime      @default(now())
   updatedAt    DateTime      @updatedAt

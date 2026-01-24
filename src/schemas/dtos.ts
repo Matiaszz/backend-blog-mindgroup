@@ -70,6 +70,8 @@ export type PostResponseDTO = {
   published: boolean;
   views: number;
   averageReadTimeInMinutes: number;
+  likes: LikeResponseDTO[];
+  favorites: FavoriteResponseDTO[];
   createdAt: Date;
   author: UserPublicDTO;
   category: CategoryResponseDTO;
@@ -99,3 +101,29 @@ export type LogResponseDTO = {
   userId: string;
   postId: string;
 };
+
+export const LikeCreationSchema = z.object({
+  postId: z.uuid(),
+});
+
+
+export type LikeCreateDTO = z.infer<typeof LikeCreationSchema>;
+
+export type LikeResponseDTO = {
+  id: number,
+  userId: string,
+  postId: string
+}
+
+export const FavoriteCreationSchema = z.object({
+  postId: z.uuid(),
+});
+
+
+export type FavoriteCreateDTO = z.infer<typeof FavoriteCreationSchema>;
+
+export type FavoriteResponseDTO = {
+  id: number,
+  userId: string,
+  postId: string
+}
