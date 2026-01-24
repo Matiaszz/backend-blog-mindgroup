@@ -180,7 +180,7 @@ export async function deletePostById(userId: string, postId: string) {
   if (!userId) throw new AppError('User not found', 404);
   if (!postId) throw new AppError('Post not found', 404);
 
-  const post = await db.post.findUnique({where: {
+  const post = await db.post.delete({where: {
       authorId: userId,
       id: postId
     }
