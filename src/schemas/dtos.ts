@@ -14,6 +14,15 @@ export const UserRegisterSchema = z.object({
 
 export type UserRegisterDTO = z.infer<typeof UserRegisterSchema>;
 
+export const UserUpdateSchema = z.object({
+  name: z.string().min(2, "Nome muito curto").optional(),
+  email: z.email("Email inválido").optional(),
+  biography: z.string().optional(),
+  profilePictureUrl: z.url().optional()
+});
+
+export type UserUpdateDTO = z.infer<typeof UserUpdateSchema>;
+
 // Login
 export const UserLoginSchema = z.object({
   email: z.email(),

@@ -1,7 +1,7 @@
 import { Request, Response } from "express";
-import {  UserResponseDTO } from "../schemas/dtos";
+import {  UserPublicDTO, UserResponseDTO, UserUpdateDTO, UserUpdateSchema } from "../schemas/dtos";
 import { AppError } from "../error/AppError";
-import { getMe } from "../services/userService";
+import { getMe, updateUser } from "../services/userService";
 
 
 export async function getUserController(req: Request, res: Response) {
@@ -10,5 +10,19 @@ export async function getUserController(req: Request, res: Response) {
     }
 
     const user: UserResponseDTO = await getMe(req.user.id);
-    return res.status(200).json(user);
+    return res.json(user);
+}
+
+export async function updateUserController(req: Request, res: Response) {
+    console.warn("DTO: ", req.body);
+    if(!req.user){
+        throw new AppError('Você não está autenticado', 401);
+    }
+    
+    const parsed = UserUpdateSchema.safeParse(req.body);
+    console.warn(parsed);
+    if (!parsed.success) return res.status(400).json(parsed.error.flatten().formErrors);
+
+    const user: UserPublicDTO = await updateUser(req.user.id, req.body as UserUpdateDTO);
+    return res.json(user);    
 }

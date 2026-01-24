@@ -1,6 +1,6 @@
 import {Router} from 'express';
 import { AppError } from '../error/AppError';
-import { getUserController } from '../controllers/userController';
+import { getUserController, updateUserController } from '../controllers/userController';
 import { createPostController, deletePostByIdController, getMyPostsController, removeCover, togglePostFavoriteController, tooglePostLikeController as togglePostLikeController, updatePostByIdController, uploadImageController } from '../controllers/postController';
 import multer from 'multer';
 import { multerConfig } from '../config/multer';
@@ -53,6 +53,10 @@ router.post('/toggleLike', async (req, res) => {
 
 router.post('/toggleFavorite', async (req, res) => {
     await togglePostFavoriteController(req, res);
+});
+
+router.put('/user', async (req, res) => {
+    await updateUserController(req, res);
 });
 
 export default router;
