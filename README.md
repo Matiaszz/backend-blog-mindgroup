@@ -1,4 +1,4 @@
-# Projeto case para a Mind Consulting
+# Case de Estágio - Mind Consulting
 
 ---
 
