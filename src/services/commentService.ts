@@ -2,6 +2,7 @@ import { PrismaClient } from "@prisma/client";
 import { AppError } from "../error/AppError";
 import { CommentCreateDTO, CommentLikeResponseDTO, CommentResponseDTO } from "../schemas/dtos";
 import { dmmfToRuntimeDataModel } from "@prisma/client/runtime/library";
+import { createLog } from "./logService";
 
 const db = new PrismaClient();
 
@@ -16,6 +17,8 @@ export async function createComment(userId: string, dto: CommentCreateDTO) {
         }, select: getCommentSelect()
 
     });
+
+    await createLog(userId, {postId: dto.postId, action: "Comentou em"});
 
     return comment as CommentResponseDTO;
 }

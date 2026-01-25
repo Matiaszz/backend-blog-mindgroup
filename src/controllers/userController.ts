@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import {  UserPublicDTO, UserResponseDTO, UserUpdateDTO, UserUpdateSchema } from "../schemas/dtos";
 import { AppError } from "../error/AppError";
 import { getMe, updateUser } from "../services/userService";
+import { createLog } from "../services/logService";
 
 
 export async function getUserController(req: Request, res: Response) {

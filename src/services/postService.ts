@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { AppError } from "../error/AppError";
 import { FavoriteResponseDTO, LikeCreateDTO, LikeResponseDTO, PostCreateDTO, PostResponseDTO } from "../schemas/dtos";
+import { createLog } from "./logService";
 
 const db = new PrismaClient();
 
@@ -292,6 +293,7 @@ export async function toogleLikePost(userId: string, {postId}: LikeCreateDTO) {
           userId: true
         }
       });
+      await createLog(userId, {postId: post.id, action: "Curtiu"});
 
       return {...create as LikeResponseDTO, like: true };
     }
@@ -305,8 +307,12 @@ export async function toogleLikePost(userId: string, {postId}: LikeCreateDTO) {
       }
     });
 
+    
+
     return {...deleteLike as LikeResponseDTO, like: false };
   });
+
+  
 
   return res as LikeResponseDTO;
 }
@@ -352,6 +358,8 @@ export async function toggleFavoritePost(userId: string, {postId}: LikeCreateDTO
         }
       }
     });
+
+    await createLog(userId, {postId: post.id, action: "Favoritou"});
 
     return {...deleteFavorite as FavoriteResponseDTO, favorited: false };
   });

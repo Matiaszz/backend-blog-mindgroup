@@ -2,7 +2,6 @@ import { Request, Response } from "express";
 import { createPost, deletePostById, getAllPosts, getMyPosts, getPost, getPostCoverImage, removeCoverImage, toggleFavoritePost, toogleLikePost as toggleLikePost, updatePostById, uploadImage } from "../services/postService";
 import { FavoriteCreateDTO, FavoriteCreationSchema, LikeCreateDTO, LikeCreationSchema, PostCreateDTO, PostCreateSchema } from "../schemas/dtos";
 import { AppError } from "../error/AppError";
-import { Bytes } from "@prisma/client/runtime/library";
 
 export async function createPostController(req: Request, res: Response) {
     const parsed = PostCreateSchema.safeParse(req.body);
