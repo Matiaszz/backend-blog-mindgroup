@@ -5,6 +5,7 @@ import { createPostController, deletePostByIdController, getMyPostsController, r
 import multer from 'multer';
 import { multerConfig } from '../config/multer';
 import { createCommentController, toggleCommentLikeController } from '../controllers/commentController';
+import { getLatestActivitesController } from '../controllers/logController';
 
 const router = Router();
 const upload = multer(multerConfig);
@@ -62,5 +63,9 @@ router.put('/toggleCommentLike', async (req, res) => {
 router.put('/user', async (req, res) => {
     await updateUserController(req, res);
 });
+
+router.get('/logs/latest', async (req, res) => {
+    await getLatestActivitesController(req, res);
+})
 
 export default router;

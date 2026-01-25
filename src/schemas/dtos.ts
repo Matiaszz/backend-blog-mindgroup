@@ -116,6 +116,13 @@ export const CommentLikeCreateSchema = z.object({
   commentId: z.int(),
 });
 
+export const LogCreationSchema = z.object({
+  postId: z.string(),
+  action: z.string()
+});
+
+export type LogCreationDTO = z.infer<typeof LogCreationSchema>;
+
 export type CommentLikeDTO = z.infer<typeof CommentLikeCreateSchema>;
 
 export type CommentLikeResponseDTO = {
@@ -128,9 +135,9 @@ export type CommentLikeResponseDTO = {
 export type LogResponseDTO = {
   id: number;
   action: string;
-  createdAt: Date;
   userId: string;
   postId: string;
+  createdAt: Date;
 };
 
 export const LikeCreationSchema = z.object({

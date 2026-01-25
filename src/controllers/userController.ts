@@ -14,7 +14,6 @@ export async function getUserController(req: Request, res: Response) {
 }
 
 export async function updateUserController(req: Request, res: Response) {
-    console.warn("DTO: ", req.body);
     if(!req.user){
         throw new AppError('Você não está autenticado', 401);
     }
