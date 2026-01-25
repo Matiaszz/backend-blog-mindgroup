@@ -8,6 +8,6 @@ export async function getLatestActivitesController(req: Request, res: Response) 
         throw new AppError('Você não está autenticado', 401);
     }
 
-    const logs: LogResponseDTO[] = await getLatestActivites(req.user.id, req.body.quantity);
-    return res.json({logs});    
+    const logs: LogResponseDTO[] = await getLatestActivites(req.user.id, 5);
+    return res.json(logs);    
 }

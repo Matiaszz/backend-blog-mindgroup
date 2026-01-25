@@ -1,6 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { AppError } from "../error/AppError";
-import { FavoriteResponseDTO, LikeCreateDTO, LikeResponseDTO, PostCreateDTO, PostResponseDTO } from "../schemas/dtos";
+import { FavoriteResponseDTO, getPostSelect, LikeCreateDTO, LikeResponseDTO, PostCreateDTO, PostResponseDTO } from "../schemas/dtos";
 import { createLog } from "./logService";
 
 const db = new PrismaClient();
@@ -379,69 +379,3 @@ function calculateReadTime(text: string): number {
   return Math.max(1, Math.ceil(words / WORDS_PER_MINUTE));
 }
 
-function getPostSelect() {
-  return {
-      id: true,
-      title: true,
-      summary: true,
-      content: true,
-      published: true,
-      views: true,
-      averageReadTimeInMinutes: true,
-      createdAt: true,
-
-      author: {
-        select: {
-          id: true,
-          name: true,
-          email: true,
-          profilePictureUrl: true,
-        },
-      },
-
-      category: {
-        select: {
-          id: true,
-          label: true,
-        },
-      },
-
-      likes: {
-        select: {
-          id: true,
-          userId: true,
-          postId: true
-        }
-      },
-
-      favorites: {
-        select: {
-          id: true,
-          userId: true,
-          postId: true
-        }
-      },
-
-      comments: {
-        select : {
-          id: true,
-          content: true,
-          user: true,
-          commentLikes: true,
-          createdAt: true
-
-        }
-      },
-
-      postTags: {
-        select: {
-          tag: {
-            select: {
-              id: true,
-              name: true,
-            },
-          },
-        },
-      },
-    }
-}
