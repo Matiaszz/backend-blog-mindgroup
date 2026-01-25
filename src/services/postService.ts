@@ -225,13 +225,19 @@ export async function updatePostById(userId: string, postId: string, dto: PostCr
     title: dto.title,
     summary: dto.summary,
 
-    tags: {
-      set: [], 
-      connectOrCreate: dto.tags.map(tag => ({
-        where: { name: tag },
-        create: { name: tag }
+    postTags: {
+      deleteMany: {},
+      create: dto.tags.map(tName => ({
+        tag: {
+          connectOrCreate: {
+            where: { name: tName },
+            create: { name: tName }
+          }
+        }
       }))
-    },
+    }
+    ,
+    content: dto.content,
 
     averageReadTimeInMinutes: readTime, 
     categoryId: dto.categoryId,
